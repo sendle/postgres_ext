@@ -29,6 +29,7 @@ module ActiveRecord
             value = value.select(value.klass.arel_table[value.klass.primary_key]) if value.select_values.empty?
             attribute.in(value.arel.ast)
           when Array, ActiveRecord::Associations::CollectionProxy
+            table = table.left if table.is_a?(Arel::Nodes::TableAlias)
             column_definition = engine.connection.columns(table.name).find { |col| col.name == column }
 
             if column_definition.respond_to?(:array) && column_definition.array
